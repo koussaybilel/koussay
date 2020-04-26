@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/koussay/static/css/main.c55f0689.chunk.css",
+    "main.js": "/koussay/static/js/main.725e814c.chunk.js",
+    "main.js.map": "/koussay/static/js/main.725e814c.chunk.js.map",
+    "runtime-main.js": "/koussay/static/js/runtime-main.63faf632.js",
+    "runtime-main.js.map": "/koussay/static/js/runtime-main.63faf632.js.map",
+    "static/css/2.de424728.chunk.css": "/koussay/static/css/2.de424728.chunk.css",
+    "static/js/2.fa494c61.chunk.js": "/koussay/static/js/2.fa494c61.chunk.js",
+    "static/js/2.fa494c61.chunk.js.map": "/koussay/static/js/2.fa494c61.chunk.js.map",
+    "index.html": "/koussay/index.html",
+    "precache-manifest.d22fdafc719d6e39785f0f39afdcb86c.js": "/koussay/precache-manifest.d22fdafc719d6e39785f0f39afdcb86c.js",
+    "service-worker.js": "/koussay/service-worker.js",
+    "static/css/2.de424728.chunk.css.map": "/koussay/static/css/2.de424728.chunk.css.map",
+    "static/css/main.c55f0689.chunk.css.map": "/koussay/static/css/main.c55f0689.chunk.css.map",
+    "static/js/2.fa494c61.chunk.js.LICENSE.txt": "/koussay/static/js/2.fa494c61.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.63faf632.js",
+    "static/css/2.de424728.chunk.css",
+    "static/js/2.fa494c61.chunk.js",
+    "static/css/main.c55f0689.chunk.css",
+    "static/js/main.725e814c.chunk.js"
+  ]
+}
