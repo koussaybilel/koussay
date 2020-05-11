@@ -6,6 +6,9 @@ import "./App.css";
 
 import Candidat from "./components/candidat.component";
 import CandidatList from "./components/candidat-list.component";
+import AddFeaturedJob from "./components/add-featuredjob";
+import changeCandidature from "./components/changecandidat";
+
 
 class App extends Component {
   render() {
@@ -22,7 +25,16 @@ class App extends Component {
                   Candidat 
                 </Link>
               </li>
-              
+              <li className="nav-item">
+                <Link to={"/Job"} className="nav-link">
+                add job
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/change"} className="nav-link">
+                add to form
+                </Link>
+              </li>
             </div>
           </nav>
 
@@ -30,7 +42,8 @@ class App extends Component {
             <Switch>
               <Route exact path={["/", "/candidat"]} component={CandidatList} />
               <Route path="/candidat/:id" component={Candidat} />
-              
+              <Route path="/Job" component={AddFeaturedJob} />
+              <Route path="/change" component={changeCandidature} />
             </Switch>
           </div>
         </div>

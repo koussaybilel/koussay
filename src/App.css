@@ -42,7 +42,9 @@
 	padding: 2em;
 }
 
-
+body {
+  background-image: url("fin.jpg");
+}
 /* ********************************************table design **********************************/
 .rwd-table {
   margin: 1em 0;

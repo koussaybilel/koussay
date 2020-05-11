@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import CandidatDataService from "../services/candidat.service";
 import { Link } from "react-router-dom";
-
+import {Card, Table, Image, ButtonGroup, Button, InputGroup, FormControl} from 'react-bootstrap';
+import {faList, faEdit, faTrash, faStepBackward, faFastBackward, faStepForward, faFastForward} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import logo from "../1.jpg"
 export default class CandidatList extends Component {
   constructor(props) {
     super(props);
@@ -17,11 +20,16 @@ export default class CandidatList extends Component {
     this.searchDiplome = this.searchDiplome.bind(this);
     this.searchExperience = this.searchExperience.bind(this);
     this.searchPoste = this.searchPoste.bind(this);
+   
     
     this.state = {
       candidat: [],
       currentCandidat: null,
       currentIndex: -1,
+
+      currentPage : 1,
+      candidatPerPage : 5,
+
       searchTitle: "",
       searchDiplome: "",
       searchExperience: "",
@@ -38,7 +46,7 @@ export default class CandidatList extends Component {
   }
 
   componentDidMount() {
-    this.retrieveCandidat();
+    this.retrieveCandidat(this.state.currentPage);
   }
 
   onChangeSearchTitle(e) {
@@ -76,31 +84,72 @@ export default class CandidatList extends Component {
  
  
 
-  deleteCandidat() {    
-    CandidatDataService.delete(this.state.currentCandidat.id)
-      .then(response => {
-        console.log(response.data);
-        this.props.history.push('/candidat')
-      })
-      .catch(e => {
-        console.log(e);
-      });
+
+/**************************************partie pagination ********************************* */
+
+  retrieveCandidat(currentPage)
+{
+  currentPage -= 1;
+var x  = +currentPage+"&size="+this.state.candidatPerPage 
+
+    CandidatDataService.getAll(x)
+    .then(response => response.data)
+    .then((data) => {this.setState({
+      candidat: data.content,
+      totalPages: data.totalPages,
+      totalElements: data.totalElements,
+      currentPage: data.number + 1
+    });
+    console.log(data)
+  })
+  .catch(e => {
+    console.log(e);
+  });
+}
+
+
+changePage = event => {
+  let targetPage = parseInt(event.target.value);
+  this.retrieveCandidat(targetPage);
+  this.setState({
+      [event.target.name]: targetPage
+  });
+};
+
+
+firstPage = () => {
+  let firstPage = 1;
+  if(this.state.currentPage > firstPage) {
+      this.retrieveCandidat(firstPage);
   }
+};
 
 
-  retrieveCandidat() {
-    CandidatDataService.getAll()
-      .then(response => {
-        this.setState({
-          candidat: response.data
-        });
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+prevPage = () => {
+  let prevPage = 1;
+  if(this.state.currentPage > prevPage) {
+      this.retrieveCandidat(this.state.currentPage - prevPage);
   }
+};
 
+
+lastPage = () => {
+  let condition = Math.ceil(this.state.totalElements / this.state.candidatPerPage);
+  if(this.state.currentPage < condition) {
+      this.retrieveCandidat(condition);
+  }
+};
+
+nextPage = () => {
+  if(this.state.currentPage < Math.ceil(this.state.totalElements / this.state.candidatPerPage)) {
+      this.retrieveCandidat(this.state.currentPage + 1);
+  }
+};
+
+
+
+
+/******************************************fin partie pagination ************************************************** */
   refreshList() {
     this.retrieveCandidat();
     this.setState({
@@ -368,37 +417,43 @@ CandidatDataService.trie(t)
 
 
 
+      downloadcv(id) {
+        CandidatDataService.download(id) 
+      .then(response => {
+        const filename =  response.headers.get('Content-Disposition').split('filename=')[1];
+        response.blob().then(blob => {
+          let url=  window.URL.createObjectURL(blob);
+          let a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.click();})
+        
+      })
+    
+      }
+    
+
+
+
+
   render() {
-    const { searchTitle,searchDiplome,searchPoste, searchExperience ,candidat, currentCandidat, currentIndex } = this.state;
-   
+    const { searchTitle,searchDiplome,searchPoste, searchExperience ,candidat, currentCandidat,  currentPage, totalPages } = this.state;
+    const pageNumCss = {
+      width: "45px",
+      border: "1px solid #17A2B8",
+      color: "#17A2B8",
+      textAlign: "center",
+      fontWeight: "bold"
+  };
+
+
+
+  
     return (
-      <div className="" >
+      <body>
+      
                  
-                  <div className="container">
-                              <div className="col-md-6 center">
-                              <div className="input-group mb-3">
-                                                <input
-                                                  type="text"
-                                                  className="form-control"
-                                                  placeholder=" Global Search "
-                                                  value={searchTitle}
-                                                  onChange={this.onChangeSearchTitle}
-                                                />
-                                                            <div className="input-group-append">
-                                                              <button
-                                                                className="btn btn-outline-secondary"
-                                                                type="button"
-                                                                onClick={this.searchTitle}
-                                                              >
-                                                                Search
-                                                              </button>
-                                                            </div>
-                                              </div>
-                              </div>
-
-
-                             
-                              </div>
+                 
 
 
         
@@ -406,9 +461,10 @@ CandidatDataService.trie(t)
 
                <br></br>
                {/******************************tableau de recherche*********************************** */}
-               <h1>search table by</h1>
+              <div className="row">
+              <div className="col-md-6">
                <table className="rwd-table">
-               <thead></thead>
+               <thead> <FontAwesomeIcon icon={faList} /> serach by </thead>
   <tbody>
   <tr>
     <td data-th="diplome"><input
@@ -453,90 +509,131 @@ CandidatDataService.trie(t)
                                             
   </tr></tbody>
  
-</table>
+</table></div>
+<div className="col-md-6"><input
+                                                  type="text"
+                                                  className="form-control"
+                                                  placeholder=" Global Search "
+                                                  value={searchTitle}
+                                                  onChange={this.onChangeSearchTitle}
+                                                /><button
+                                                className="btn btn-outline-secondary"
+                                                type="button"
+                                                onClick={this.searchTitle}
+                                              >
+                                                Search
+                                              </button></div>
+
+</div>
               
               {/******************************fin tableau de recherche *********************************** */}
-                {/******************************tableau *********************************** */}
-          
-                <h1>table candidat</h1>
-<div  className="container">
 
-          <table  className="table">
-          <thead className="thead-dark">
-         
-
-      
- 
-              <tr>
-          <th>Id</th>
-          <th>Nom</th>
-          <th>prenom</th>
-          <th>tel</th>
-          <th>Email</th>
-          <th>Diplome</th>
-          <th>experience</th>
-          <th>POSTE</th>
-          <th> Date de modification</th>
-          <th> date de creaction</th>
-          <th>action</th>
-        
-        </tr>
-      </thead>
- 
-
-
-      <tbody >
-        { (candidat.length > 0) ? candidat.map( (candidat,index) => {
-           return (
-            <tr    key={index}   >
-              <td >
-                
-                <div className={"input-group-append"+(index === currentIndex ? "active" : "")}>
+               {/******************************tableau *********************************** */}
+               
+                <Card className={"border border-dark bg-dark text-white"} style={{ width: '220%' }}>
+                <Card.Header ><FontAwesomeIcon icon={faList} /> candidat List</Card.Header>
+                    <Card.Body>
+                        <Table bordered hover striped variant="dark">
+                            <thead>
+                                <tr>
+                                <th>Id</th>
+                                <th>Nom</th>
+                                <th>prenom</th>
+                                <th>tel</th>
+                                <th>Email</th>
+                                <th>Diplome</th>
+                                <th>experience</th>
+                                <th>POSTE</th>
+                                <th> Date de modification</th>
+                                <th> date de creaction</th>
+                                <th>filename</th>
+                                <th>action</th>
+                                </tr>
+                                    </thead>
+                              <tbody>
+                                {  candidat.length === 0 ?
+                                <tr align="center">
+                                <td colSpan="11">No candidat Available.</td>
+                              </tr> :
+                               candidat.map((candidat) => (
+                                <tr key={candidat.id}>
+                                <td>
+                                    <Image src={logo} roundedCircle width="25" height="25"/> {candidat.id}
+                                    </td>
+                                    <td>{ candidat.title}</td>
+                                    <td>{ candidat.prenom}</td>
+                                    <td>{ candidat.tel }</td>
+                                    <td>{ candidat.email }</td>
+                                    <td>{ candidat.diplome }</td>
+                                    <td>{ candidat.experience }</td>
+                                    <td>{ candidat.poste }</td>
+                                    <td>{ candidat.modifyDate }</td>
+                                    <td>{ candidat.createDate }</td>
+                                  <td> <button  onClick={() => this.downloadcv(candidat.filename)} >{candidat.filename}</button> </td>
+           <td>
+                 <ButtonGroup>
+                 <Link  to={"/candidat/" + candidat.id} className="btn btn-sm btn-warning"><FontAwesomeIcon icon={faEdit} /></Link>{' '}
+                 <Button size="sm" variant="outline-danger"   ><FontAwesomeIcon icon={faTrash} />
                  
-              
-               { candidat.id }
-             
-            </div>     
-                
-                
-                
-                
-                </td>  
-              <td>{ candidat.title}</td>
-              <td>{ candidat.prenom}</td>
-              <td>{ candidat.tel }</td>
-              <td>{ candidat.email }</td>
-              <td>{ candidat.diplome }</td>
-              <td>{ candidat.experience }</td>
-              <td>{ candidat.poste }</td>
-              <td>{ candidat.modifyDate }</td>
-              <td>{ candidat.createDate }</td>
-              
-                
-              
-              <td>
-             
-              <Link
-            to={"/candidat/" + candidat.id}
-            className="badge badge-warning"
-          >
-            Edit 
-          </Link>
-             
-            
+                 
+                 
+                 </Button>
+                </ButtonGroup>
+          </td>
+          </tr>
+          ))
+                                }
+                              </tbody>
+                        </Table>
+    </Card.Body>
+    {candidat.length > 0 ?
+    <Card.Footer>
+    <div style={{"float":"left"}}>
+        Showing Page {currentPage} of {totalPages}
+    </div>
+    <div style={{"float":"right"}}>
+        <InputGroup size="sm">
+            <InputGroup.Prepend>
+                <Button type="button" variant="outline-info" disabled={currentPage === 1 ? true : false}
+                    onClick={this.firstPage}>
+                    <FontAwesomeIcon icon={faFastBackward} /> First
+                </Button>
+                <Button type="button" variant="outline-info" disabled={currentPage === 1 ? true : false}
+                    onClick={this.prevPage}>
+                    <FontAwesomeIcon icon={faStepBackward} /> Prev
+                </Button>
+            </InputGroup.Prepend>
+            <FormControl style={pageNumCss} className={"bg-dark"} name="currentPage" value={currentPage}
+                onChange={this.changePage}/>
+            <InputGroup.Append>
+                <Button type="button" variant="outline-info" disabled={currentPage === totalPages ? true : false}
+                    onClick={this.nextPage}>
+                    <FontAwesomeIcon icon={faStepForward} /> Next
+                </Button>
+                <Button type="button" variant="outline-info" disabled={currentPage === totalPages ? true : false}
+                    onClick={this.lastPage}>
+                    <FontAwesomeIcon icon={faFastForward} /> Last
+                </Button>
+            </InputGroup.Append>
+        </InputGroup>
+    </div>
+</Card.Footer> : null
+}
+</Card>
+
+
+                    
+
              
 
 
-              </td>
-            </tr>
-          )
-         }) : <tr><td colSpan="5">Loading...</td></tr> }
-      </tbody>
-    </table>
-    
+
+               
+  
          
 {/******************************fin tableau *********************************** */}
 
+              
 
           <button
             className="m-3 btn btn-sm btn-danger"
@@ -544,7 +641,7 @@ CandidatDataService.trie(t)
           >
             Remove All
           </button>
-        </div>
+       
 
 
         <div className="col-md-6">
@@ -615,7 +712,10 @@ CandidatDataService.trie(t)
             </div>
           )}
         </div>
-      </div>
+      
+    
+      </body>
     );
   }
+ 
 }
