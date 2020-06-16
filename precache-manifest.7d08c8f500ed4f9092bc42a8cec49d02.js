@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b7fbcaa1d56799ddff312743068bf6c3",
+    "revision": "2716d5c891cdc1ca680fad9fc3546871",
     "url": "/koussay/index.html"
   },
   {
-    "revision": "3843acf94d8e9466fef1",
+    "revision": "2858d8f96a2d64bf6789",
     "url": "/koussay/static/css/2.de424728.chunk.css"
   },
   {
-    "revision": "b6527b970d3692837523",
-    "url": "/koussay/static/css/main.7fe6b744.chunk.css"
+    "revision": "d394d74419f404945996",
+    "url": "/koussay/static/css/main.f986108d.chunk.css"
   },
   {
-    "revision": "3843acf94d8e9466fef1",
-    "url": "/koussay/static/js/2.0ffa61d3.chunk.js"
+    "revision": "2858d8f96a2d64bf6789",
+    "url": "/koussay/static/js/2.bed1cad2.chunk.js"
   },
   {
     "revision": "3453b8997016469371284a28c0e873e2",
-    "url": "/koussay/static/js/2.0ffa61d3.chunk.js.LICENSE.txt"
+    "url": "/koussay/static/js/2.bed1cad2.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "b6527b970d3692837523",
-    "url": "/koussay/static/js/main.252c214e.chunk.js"
+    "revision": "d394d74419f404945996",
+    "url": "/koussay/static/js/main.c5481afd.chunk.js"
   },
   {
     "revision": "7d94eb9cd4ffc50c1721",
