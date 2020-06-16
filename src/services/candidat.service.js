@@ -1,8 +1,8 @@
 import http from "../http-common";
-
+import authHeader from './auth-header';
 class CandidatDataService {
   getAll(x) {
-    return http.get(`/candidatpage?page=${x}`);
+    return http.get(`/candidatpage?page=${x}`, { headers: authHeader() });
   }
 
   get(id) {
@@ -14,7 +14,7 @@ class CandidatDataService {
   }
 
   update(id, data) {
-    return http.put(`/candidat/${id}`, data);
+    return http.put(`/candidat/${id}`, data,{ headers: authHeader() });
   }
 
   delete(id) {
@@ -32,7 +32,7 @@ class CandidatDataService {
 
   Search(x) {
     
-    return http.get(`/candidat/Search/${x}`);
+    return http.get(`/candidat/Search/${x}`, { headers: authHeader() } );
   }
  
   SearchD(x) {
@@ -51,18 +51,18 @@ class CandidatDataService {
 
  trie(x) {
     
-    return http.post("/candidat/tr",x);
+    return http.post("/candidat/tr",x,{ headers: authHeader() });
   }
 
   triedate(x) {
     
-    return http.post("/candidat/trdate",x);
+    return http.post("/candidat/trdate",x,{ headers: authHeader() });
   }
 
 
   sync(x) {
     
-    return http.post("/candidat/sync",x);
+    return http.post("/candidat/sync",x, { headers: authHeader() });
   }
 
 
@@ -129,7 +129,7 @@ class CandidatDataService {
   }
 
   createF(data) {
-    return http.post("/fjob", data);
+    return http.post("/fjob", data,{ headers: authHeader() });
   }
 
   updateF(id, data) {
